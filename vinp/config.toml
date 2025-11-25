@@ -1,0 +1,47 @@
+[meta]
+use_amp = false
+cudnn_enable = true
+seed = 2024
+use_ema = false
+
+[acoustic]
+path = "vinp.feature.transforms"
+
+[EM_algo]
+path = "vinp.vem_rir_omit3bin_nb.VEM"
+
+[model]
+path = "vinp.TCN_SA.magTCNDrectAttSmooth_log.magTCNDrectAttSmooth"
+
+[acoustic.args]
+sr = 16000
+n_fft = 512
+win_len = 512
+hop_len = 128
+win_type = "hann"
+n_mel = 80
+
+[trainer.validation]
+interval = 1
+save_max_metric = false
+
+[EM_algo.args]
+CTF_len = 30
+errvar_init = 1
+max_steps = 40
+min_steps = 0
+eda_factor_mu = 0.7
+eda_factor_var = 0.7
+eda_factor_CTF = 0.0
+eda_factor_ErrVar = 0.0
+
+[model.args]
+input_size = 257
+output_size = 257
+num_channels = [512, 512, 512, 512, 512, 512, 512, 512]
+kernel_size = 3
+repeat = [1, 2, 5, 9, 1, 2, 5, 9, 1, 2, 5, 9, 1, 2, 5, 9]
+num_heads = 4
+embed_size = 256
+dropout1 = 0
+dropout2 = 0
