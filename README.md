@@ -30,17 +30,18 @@ python process_dir.py --input_dir noisy/ --output output/ --simple
 
 # Docker
 
-### Build docker
+### build & run docker
 ```bash
 docker build . -t pipeline
-```
-
-### run docker
-```bash
 docker run --gpus all -v ./dataset/:/app/dataset/ --rm -it pipeline bash
 ```
 
-in docker:
+### pull & run docker
+```bash
+docker run --gpus all -v ./dataset/:/app/dataset/ --rm -it sdapi/pipeline:latest bash
+```
+
+### Run pipeline P5 in docker
 ```bash
 python3 process_dir.py --input_dir dataset/input/ --output dataset/output/
 ```
