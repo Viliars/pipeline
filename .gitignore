@@ -209,3 +209,4 @@ __marimo__/
 models/
 venv/
 noisy/
+*.wav

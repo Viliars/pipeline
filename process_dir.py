@@ -4,7 +4,7 @@ from vinp import process_vinp
 from gtcrn import process_grcrn
 from utils import normalize_audio
 
-def process_with_pipeline(wav_file, result_path):
+def process_with_pipeline(wav_file, result_path, normalize):
     print(f"Process {wav_file} -> ", end="", flush=True)
 
     _, class_name = predict_class(wav_file)
@@ -19,22 +19,26 @@ def process_with_pipeline(wav_file, result_path):
         process_hybrid(wav_file, result_path)
         print(f"GTCRN processing -> ", end="", flush=True)
         process_grcrn(result_path, result_path)
+
+        if normalize:
+            normalize_audio(wav_file, result_path)
+
+    print(f"Result saved in {result_path}", flush=True)
+
+
+def process_only_hybrid(wav_file, result_path, normalize):
+    print(f"Process {wav_file} -> ", end="", flush=True)
+
+    print(f"Hybrid processing -> ", end="", flush=True)
+    process_hybrid(wav_file, result_path)
+
+    if normalize:
         normalize_audio(wav_file, result_path)
 
     print(f"Result saved in {result_path}", flush=True)
 
 
-def process_only_hybrid(wav_file, result_path):
-    print(f"Process {wav_file} -> ", end="", flush=True)
-
-    print(f"Hybrid processing -> ", end="", flush=True)
-    process_hybrid(wav_file, result_path)
-    normalize_audio(wav_file, result_path)
-
-    print(f"Result saved in {result_path}", flush=True)
-
-
-def main(input_dir, output_dir, simple):
+def main(input_dir, output_dir, simple, normalize):
     if simple:
         process_wav = process_only_hybrid
     else:
@@ -48,7 +52,7 @@ def main(input_dir, output_dir, simple):
     for fname in wavs:
         in_path = os.path.join(input_dir, fname)
         out_path = os.path.join(output_dir, fname)
-        process_wav(in_path, out_path)
+        process_wav(in_path, out_path, normalize)
 
     print(f"\n✅ Done! Enhanced files saved to: {output_dir}")
 
@@ -57,9 +61,10 @@ if __name__ == "__main__":
     import os
     import argparse
     parser = argparse.ArgumentParser(description="Pipeline #5 inference on dir")
-    parser.add_argument("--input_dir", type=str, required=True, help="Input wav file")
-    parser.add_argument("--output_dir", type=str, required=True, help="Output wav path")
+    parser.add_argument("--input_dir", type=str, required=True, help="Input dir with wav files")
+    parser.add_argument("--output_dir", type=str, required=True, help="Output dir to save results")
     parser.add_argument("--simple", action="store_true", help="Use only Hybrid 3 model")
+    parser.add_argument("--normalize", action="store_true", help="Use audio normalization after process")
     args = parser.parse_args()
 
-    main(args.input_dir, args.output_dir, args.simple)
+    main(args.input_dir, args.output_dir, args.simple, args.normalize)
