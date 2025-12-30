@@ -210,3 +210,4 @@ models/
 venv/
 noisy/
 *.wav
+.DS_Store

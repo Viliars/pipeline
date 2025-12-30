@@ -1,4 +1,4 @@
-# Pipeline P5
+# Pipeline + Streaming pipeline
 
 ### Install with new env
 ```bash
@@ -19,6 +19,7 @@ docker run --gpus all -v ./dataset/:/app/dataset/ --rm -it sdapi/pipeline:latest
 --output OUTPUT  Output wav path
 --simple         Use only Hybrid 3 model
 --normalize      Use audio normalization after process
+--streaming      Use streaming pipeline
 ```
 
 ### Options in process_dir.py
@@ -28,6 +29,7 @@ docker run --gpus all -v ./dataset/:/app/dataset/ --rm -it sdapi/pipeline:latest
 --output_dir OUTPUT_DIR  Output dir to save results
 --simple                 Use only Hybrid 3 model
 --normalize              Use audio normalization after process
+--streaming              Use streaming pipeline
 ```
 
 ### Run pipeline P5 on one .wav file

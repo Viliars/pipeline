@@ -1,6 +1,6 @@
 from efficientnet import predict_class
-from hybrid import process_hybrid
-from vinp import process_vinp
+from hybrid import process_hybrid, streaming_process_hybrid
+from vinp import process_vinp, streaming_process_vinp
 from gtcrn import process_grcrn
 from utils import normalize_audio
 
@@ -39,8 +39,27 @@ def process_only_hybrid(wav_file, result_path, normalize):
     print(f"Result saved in {result_path}", flush=True)
 
 
-def main(input, output, simple, normalize):
-    if simple:
+def process_streaming(wav_file, result_path):
+    print(f"Process {wav_file} -> ", end="", flush=True)
+
+    _, class_name = predict_class(wav_file)
+
+    print(f"Predicted Class: {class_name} -> ", end="", flush=True)
+
+    if class_name == "Reverb":
+        print(f"Streaming VINP processing -> ", end="", flush=True)
+        streaming_process_vinp(wav_file, result_path)
+    else:
+        print(f"Streaming Hybrid processing -> ", end="", flush=True)
+        streaming_process_hybrid(wav_file, result_path)
+
+    print(f"Result saved in {result_path}", flush=True)
+
+
+def main(input, output, simple, normalize, streaming):
+    if streaming:
+        process_streaming(input, output)
+    elif simple:
         process_only_hybrid(input, output, normalize)
     else:
         process_with_pipeline(input, output, normalize)
@@ -53,5 +72,6 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=str, required=True, help="Output wav path")
     parser.add_argument("--simple", action="store_true", help="Use only Hybrid 3 model")
     parser.add_argument("--normalize", action="store_true", help="Use audio normalization after process")
+    parser.add_argument("--streaming", action="store_true", help="Use streaming pipeline")
     args = parser.parse_args()
-    main(args.input, args.output, args.simple, args.normalize)
+    main(args.input, args.output, args.simple, args.normalize, args.streaming)
